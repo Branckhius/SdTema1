@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
+
+int main()
+{
+    int* fr = new int[100] { 0 };
+    int n, max_val = -1, j;
+    srand(time(nullptr));
+    n = 1000000;
+    int* v= new int[1000000];
+    for (int i = 0; i < n; i++)
+    {
+        v[i] = rand() % 100;
+    }
+
+    auto start = high_resolution_clock::now();
+
+    for (int i = 0;i < n;i++)
+    {
+        fr[v[i]]++;
+        if (max_val < v[i]) max_val = v[i];
+    }
+    for (int i = 0;i <= max_val;i++)
+    {
+        j = fr[i];
+        while (j > 0)
+        {
+            j--;
+        }
+    }
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+
+    cout << "\n\nTime taken by function: " << duration.count() << " microseconds" << endl;
+    delete[] v;
+    delete[] fr;
+    return 0;
+}

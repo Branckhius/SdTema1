@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <algorithm>
+#include <chrono>
+
+using namespace std;
+using namespace std::chrono;
+
+void presort(vector<int>& arr, int exp) {
+    vector<int> count(10, 0);
+    for (int num : arr) {
+        count[(num / exp) % 10]++;
+    }
+    for (int i = 1; i < 10; i++) {
+        count[i] += count[i - 1];
+    }
+    vector<int> output(arr.size(), 0);
+    for (int i = arr.size() - 1; i >= 0; i--) {
+        int index = (arr[i] / exp) % 10;
+        output[count[index] - 1] = arr[i];
+        count[index]--;
+    }
+    arr = output;
+}
+
+void radix_sort(vector<int>& arr) {
+    int max_num = *max_element(arr.begin(), arr.end());
+    for (int exp = 1; max_num / exp > 0; exp *= 10) {
+        presort(arr, exp);
+    }
+}
+
+int main() {
+    vector<int> arr(1000);
+    srand(time(NULL));
+    for (int i = 0; i < 1000; i++) {
+        arr[i] = rand() % 1000;
+    }
+    auto start = high_resolution_clock::now();
+    radix_sort(arr);
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+
+    cout << "Time taken by radix sort: " << duration.count() << " microseconds" << endl;
+
+    return 0;
+}s

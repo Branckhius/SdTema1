@@ -1,0 +1,55 @@
+#include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <ctime>
+#include <chrono>
+
+void quicksort(int lo, int hi, std::vector<int>& v)
+{
+    if (lo < 0 || hi >= v.size() || hi < lo) {
+        return;
+    }
+
+    int pivot;
+    pivot = v[hi];
+    int j, i, b;
+    if (hi > lo)
+    {
+        j = lo;
+        i = lo - 1;
+        while (j < hi)
+        {
+            if (v[j] < pivot)
+            {
+                i++;
+                b = v[i];
+                v[i] = v[j];
+                v[j] = b;
+            }
+            j++;
+        }
+        b = v[hi];
+        v[hi] = v[i + 1];
+        v[i + 1] = b;
+        quicksort(lo, i, v);
+        quicksort(i + 2, hi, v);
+    }
+}
+
+int main() {
+    std::srand(std::time(nullptr));
+    const int N = 10;
+    std::vector<int> v(10);
+
+    for (int i = 0; i < N; i++) {
+        v[i] = rand() % 10;
+    }
+
+    std::cout << std::endl;
+    auto start = std::chrono::high_resolution_clock::now();
+    quicksort(0, N - 1, v);
+    auto stop = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
+    std::cout << "Durata de timp necesara pentru sortarea vectorului: " << duration.count() << " microseconds" << std::endl;
+    return 0;
+}
